@@ -19,4 +19,13 @@ struct fms_t *fms_init(struct fms_t *fms, int state_num, int event_num,
 
 void fms_release(struct fms_t *fms)
 {
+	int i;
+
+	for (i = fms->state_num - 1; i >= 0; i--) {
+		free((fms->state_list)[i].branck);
+		(fms->state_list)[i].branck = NULL;
+	}
+	free(fms->state_list);
+	fms->state_list = NULL;
+	memset(fms, 0, sizeof(*fms));
 }
