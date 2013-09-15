@@ -1,17 +1,22 @@
 #ifndef _FSM_H
 #define _FSM_H
 
-typedef void (*event_callback_t)(void *);
-
-typedef void (*event_t)(int src_state, int dst_state, event_callback_t cb);
-
-struct fsm_t {
-	int *all_state;
-	int current_state;
-	int initial_state;
-	event_t *event;
+struct fms_branch {
+	int new_state;
+	void *(*func)(void *);
+	void *(*callback)(void *);
 };
 
-struct fsm_t *fsm_init(struct fsm_t *fsm, const int *all_state_list, int init_state, const event_t *event_list);
+struct fms_state {
+	int state;
+	struct fms_branch *branck;
+};
+
+struct fms {
+	int state_num;
+	struct fms_state *state_list;
+	int init_state;
+	int curr_state;
+};
 
 #endif
