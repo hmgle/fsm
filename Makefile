@@ -1,9 +1,10 @@
 .PHONY: clean
 
-all: fsm.o
+CFLAGS = -g -Wall -Wextra
 
-%.o: %.c
-	gcc $< -c -o $@ -Wall
+all: test
+
+test: test.o fsm.o
 
 clean:
-	-rm -f *.o
+	-rm -f *.o test

@@ -3,27 +3,28 @@
 
 #include <stdlib.h>
 #include <string.h>
+#include <assert.h>
 
-struct fms_branch {
+struct fsm_branch {
 	int event;
 	int new_state;
 	void *(*func)(void *);
 	void *(*callback)(void *);
 };
 
-struct fms_state {
+struct fsm_state {
 	int state;
-	struct fms_branch *branck;
+	struct fsm_branch *branck;
 };
 
-struct fms_t {
+struct fsm_t {
 	int state_num;
-	struct fms_state *state_list;
+	struct fsm_state *state_list;
 	int init_state;
 	int curr_state;
 };
 
-struct fms_t *fms_init(struct fms_t *fms, int state_num, int event_num, int init_state, int curr_state);
-void fms_release(struct fms_t *fms);
+struct fsm_t *fsm_init(struct fsm_t *fsm, int state_num, int event_num, int init_state, int curr_state);
+void fsm_release(struct fsm_t *fsm);
 
 #endif
