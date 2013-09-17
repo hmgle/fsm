@@ -12,8 +12,8 @@ struct fsm_t *fsm_init(struct fsm_t *fsm, int state_num, int event_num,
 	fsm->state_list = malloc((state_num) * sizeof(struct fsm_state));
 	memset(fsm->state_list, 0, (state_num) * sizeof(struct fsm_state));
 	for (i = 0; i < state_num; i++) {
-		(fsm->state_list)[i].branck = malloc(sizeof(struct fsm_state) * event_num);
-		memset((fsm->state_list)[i].branck, 0, sizeof(struct fsm_state) * event_num);
+		(fsm->state_list)[i].branck = malloc(sizeof(struct fsm_branch) * event_num);
+		memset((fsm->state_list)[i].branck, 0, sizeof(struct fsm_branch) * event_num);
 	}
 	return fsm;
 }
@@ -35,8 +35,8 @@ struct fsm_t *fsm_init_with_state(struct fsm_t *fsm, struct fsm_state *state, in
 		memcpy(&(fsm->state_list)[i], &state[i], sizeof(struct fsm_state));
 	}
 	for (i = 0; i < state_num; i++) {
-		(fsm->state_list)[i].branck = malloc(sizeof(struct fsm_state) * event_num);
-		memset((fsm->state_list)[i].branck, 0, sizeof(struct fsm_state) * event_num);
+		(fsm->state_list)[i].branck = malloc(sizeof(struct fsm_branch) * event_num);
+		memset((fsm->state_list)[i].branck, 0, sizeof(struct fsm_branch) * event_num);
 		for (j = 0; j < event_num; j++) {
 			assert(&((&state[i])->branck)[j]);
 			memcpy(&((fsm->state_list)[i].branck)[j], &((&state[i])->branck)[j], sizeof(struct fsm_branch));
