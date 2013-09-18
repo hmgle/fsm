@@ -11,6 +11,7 @@ struct fsm_t *fsm_init(struct fsm_t *fsm, int state_num, int event_num,
 	fsm->curr_state = curr_state;
 	fsm->state_list = malloc((state_num) * sizeof(struct fsm_state));
 	fsm->stop = 0;
+	fsm->ret = 0;
 	memset(fsm->state_list, 0, (state_num) * sizeof(struct fsm_state));
 	for (i = 0; i < state_num; i++) {
 		(fsm->state_list)[i].branck = malloc(sizeof(struct fsm_branch) * event_num);
@@ -31,6 +32,7 @@ struct fsm_t *fsm_init_with_state(struct fsm_t *fsm, struct fsm_state *state, in
 	fsm->curr_state = init_state;
 	fsm->state_list = malloc((state_num) * sizeof(struct fsm_state));
 	fsm->stop = 0;
+	fsm->ret = 0;
 	memset(fsm->state_list, 0, (state_num) * sizeof(struct fsm_state));
 	for (i = 0; i < state_num; i++) {
 		assert(&state[i] != NULL);
@@ -75,6 +77,6 @@ int fsm_run(struct fsm_t *fsm, int (*get_event)(void *), void *para,
 		if (fsm->state_list[current_state].branck[event].callback)
 			fsm->state_list[current_state].branck[event].callback(cb_para);
 	}
-	return 0;
+	return fsm->ret;
 }
 
