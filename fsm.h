@@ -24,6 +24,7 @@ struct fsm_t {
 	struct fsm_state *state_list;
 	int init_state;
 	int curr_state;
+	int stop;
 };
 
 struct fsm_t *fsm_init(struct fsm_t *fsm, int state_num, int event_num, int init_state, int curr_state);
