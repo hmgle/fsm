@@ -48,7 +48,7 @@ int main(int argc, char **argv)
 	};
 
 	// fsm_init(&fsm, 2, 2, 0, 0);
-	fsm_init_with_state(&fsm, test_fsm_state, 2, 2, EVENT0);
-	fsm_release(&fsm);
+	// fsm_init_with_state(&fsm, test_fsm_state, 2, 2, EVENT0);
+	// fsm_release(&fsm);
 	return 0;
 }

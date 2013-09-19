@@ -1,25 +1,70 @@
 #include "fsm.h"
 
-struct fsm_t *fsm_init(struct fsm_t *fsm, int state_num, int event_num, 
-		       int init_state, int curr_state)
+struct fsm_t *fsm_init(struct fsm_t *fsm)
 {
-	int i;
-
-	assert(state_num > 0 && event_num > 0);
-	fsm->state_num = state_num;
-	fsm->init_state = init_state;
-	fsm->curr_state = curr_state;
-	fsm->state_list = malloc((state_num) * sizeof(struct fsm_state));
-	fsm->stop = 0;
-	fsm->ret = 0;
-	memset(fsm->state_list, 0, (state_num) * sizeof(struct fsm_state));
-	for (i = 0; i < state_num; i++) {
-		(fsm->state_list)[i].branck = malloc(sizeof(struct fsm_branch) * event_num);
-		memset((fsm->state_list)[i].branck, 0, sizeof(struct fsm_branch) * event_num);
-	}
+	assert(fsm != NULL);
+	memset(fsm, 0, sizeof(*fsm));
 	return fsm;
 }
 
+int fsm_addstate(struct fsm_t *fsm, struct fsm_state *state)
+{
+	struct fsm_state *tmp;
+
+	assert(state != NULL);
+	if (fsm->state_list == NULL) {
+		fsm->state_list = malloc(sizeof(struct fsm_state));
+		INIT_LIST_HEAD(&fsm->state_list->list);
+		fsm->state_list->state = state->state;
+		fsm->state_list->event_num = state->event_num;
+		fsm->state_list->branck = state->branck;
+		INIT_LIST_HEAD(&fsm->state_list->list);
+	} else {
+		list_for_each_entry(tmp, &fsm->state_list->list, list) {
+			if (tmp->state == state->state)
+				return -1;
+		}
+		tmp = malloc(sizeof(*tmp));
+		memcpy(tmp, state, sizeof(*tmp));
+		list_add(&tmp->list, &fsm->state_list->list);
+	}
+	return 0;
+}
+
+int fsm_addstate_force(struct fsm_t *fsm, struct fsm_state *state)
+{
+	struct fsm_state *tmp;
+	struct list_head *pos, *q;
+
+	assert(state != NULL);
+	if (fsm->state_list == NULL) {
+		fsm->state_list = malloc(sizeof(struct fsm_state));
+		INIT_LIST_HEAD(&fsm->state_list->list);
+		fsm->state_list->state = state->state;
+		fsm->state_list->event_num = state->event_num;
+		fsm->state_list->branck = state->branck;
+		INIT_LIST_HEAD(&fsm->state_list->list);
+	} else {
+		list_for_each_safe(pos, q, &fsm->state_list->list){
+		 	tmp = list_entry(pos, struct fsm_state, list);
+			if (tmp->state == state->state) {
+		 		list_del(pos);
+		 		free(tmp);
+
+				tmp = malloc(sizeof(*tmp));
+				memcpy(tmp, state, sizeof(*tmp));
+				list_add(&tmp->list, &fsm->state_list->list);
+				return 1;
+			}
+		}
+		tmp = malloc(sizeof(*tmp));
+		memcpy(tmp, state, sizeof(*tmp));
+		list_add(&tmp->list, &fsm->state_list->list);
+	}
+	return 0;
+}
+
+#if 0
 struct fsm_t *fsm_init_with_state(struct fsm_t *fsm, struct fsm_state *state, int state_num, 
 				  int event_num, int init_state)
 {
@@ -31,6 +76,7 @@ struct fsm_t *fsm_init_with_state(struct fsm_t *fsm, struct fsm_state *state, in
 	fsm->init_state = init_state;
 	fsm->curr_state = init_state;
 	fsm->state_list = malloc((state_num) * sizeof(struct fsm_state));
+	fsm->data = NULL;
 	fsm->stop = 0;
 	fsm->ret = 0;
 	memset(fsm->state_list, 0, (state_num) * sizeof(struct fsm_state));
@@ -49,6 +95,7 @@ struct fsm_t *fsm_init_with_state(struct fsm_t *fsm, struct fsm_state *state, in
 	}
 	return fsm;
 }
+#endif
 
 void fsm_release(struct fsm_t *fsm)
 {
