@@ -40,8 +40,9 @@ struct fsm_t {
 };
 
 struct fsm_t *fsm_init(struct fsm_t *fsm);
-int fsm_addstate(struct fsm_t *fsm, struct fsm_state *state);
-int fsm_addstate_force(struct fsm_t *fsm, struct fsm_state *state);
+int state_add_branch(struct fsm_state *state, struct fsm_branch *branch);
+int fsm_add_state(struct fsm_t *fsm, struct fsm_state *state);
+int fsm_renew_state(struct fsm_t *fsm, struct fsm_state *state);
 #if 0
 struct fsm_t *fsm_init_with_table(struct fsm_t *fsm, struct fsm_state *state, int state_num, int event_num, int init_state);
 #endif
