@@ -19,7 +19,7 @@ struct fsm_branch {
 struct fsm_state {
 	int state;
 	int event_num;
-	struct fsm_branch *branck;
+	struct fsm_branch *branch;
 	struct list_head list;
 };
 

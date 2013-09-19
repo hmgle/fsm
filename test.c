@@ -26,7 +26,7 @@ int main(int argc, char **argv)
 		EVENT0 = 0,
 		EVENT1 = 1,
 	};
-	struct fsm_branch test_branck[][2] = {
+	struct fsm_branch test_branch[][2] = {
 		/* STATE0 */
 		{
 			/* EVENT0 */
@@ -43,8 +43,8 @@ int main(int argc, char **argv)
 		},
 	};
 	struct fsm_state test_fsm_state[] = {
-		{STATE0, 2, test_branck[0]},
-		{STATE1, 2, test_branck[1]},
+		{STATE0, 2, test_branch[0]},
+		{STATE1, 2, test_branch[1]},
 	};
 
 	// fsm_init(&fsm, 2, 2, 0, 0);
