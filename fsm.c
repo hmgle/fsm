@@ -31,6 +31,39 @@ int state_add_branch(struct fsm_state *state, struct fsm_branch *branch)
 	return 0;
 }
 
+int state_renew_branch(struct fsm_state *state, struct fsm_branch *branch)
+{
+	struct fsm_branch *tmp;
+	struct list_head *pos, *q;
+
+	assert(state != NULL && branch != NULL);
+	if (state->branch == NULL) {
+		state->branch = malloc(sizeof(*state->branch));
+		state->branch->event = branch->event;
+		state->branch->new_state = branch->new_state;
+		state->branch->func = branch->func;
+		state->branch->callback = branch->callback;
+		INIT_LIST_HEAD(&state->branch->list);
+	} else {
+		list_for_each_safe(pos, q, &state->branch->list) {
+		 	tmp = list_entry(pos, struct fsm_branch, list);
+			if (tmp->event == branch->event) {
+		 		list_del(pos);
+		 		free(tmp);
+
+				tmp = malloc(sizeof(*tmp));
+				memcpy(tmp, branch, sizeof(*tmp));
+				list_add(&tmp->list, &state->branch->list);
+				return 1;
+			}
+		}
+		tmp = malloc(sizeof(*tmp));
+		memcpy(tmp, branch, sizeof(*tmp));
+		list_add(&tmp->list, &state->branch->list);
+	}
+	return 0;
+}
+
 int fsm_add_state(struct fsm_t *fsm, struct fsm_state *state)
 {
 	struct fsm_state *tmp;

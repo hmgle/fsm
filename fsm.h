@@ -41,6 +41,7 @@ struct fsm_t {
 
 struct fsm_t *fsm_init(struct fsm_t *fsm);
 int state_add_branch(struct fsm_state *state, struct fsm_branch *branch);
+int state_renew_branch(struct fsm_state *state, struct fsm_branch *branch);
 int fsm_add_state(struct fsm_t *fsm, struct fsm_state *state);
 int fsm_renew_state(struct fsm_t *fsm, struct fsm_state *state);
 #if 0
