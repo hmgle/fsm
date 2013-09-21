@@ -119,38 +119,29 @@ int fsm_renew_state(struct fsm_t *fsm, struct fsm_state *state)
 	return 0;
 }
 
-#if 0
 struct fsm_t *fsm_init_with_state(struct fsm_t *fsm, struct fsm_state *state, int state_num, 
 				  int event_num, int init_state)
 {
 	int i;
 	int j;
+	struct fsm_state tmp_state;
 
-	assert(state != NULL);
+	assert(state != NULL && fsm != NULL);
 	fsm->state_num = state_num;
 	fsm->init_state = init_state;
 	fsm->curr_state = init_state;
-	fsm->state_list = malloc((state_num) * sizeof(struct fsm_state));
 	fsm->data = NULL;
 	fsm->stop = 0;
 	fsm->ret = 0;
-	memset(fsm->state_list, 0, (state_num) * sizeof(struct fsm_state));
+	fsm->state_list = NULL;
 	for (i = 0; i < state_num; i++) {
-		assert(&state[i] != NULL);
-		memcpy(&(fsm->state_list)[i], &state[i], sizeof(struct fsm_state));
-	}
-	for (i = 0; i < state_num; i++) {
-		(fsm->state_list)[i].branch = malloc(sizeof(struct fsm_branch) * event_num);
-		memset((fsm->state_list)[i].branch, 0, sizeof(struct fsm_branch) * event_num);
-		for (j = 0; j < event_num; j++) {
-			assert(&((&state[i])->branch)[j]);
-			memcpy(&((fsm->state_list)[i].branch)[j], &((&state[i])->branch)[j],
-			       sizeof(struct fsm_branch));
-		}
+		memset(&tmp_state, 0, sizeof(tmp_state));
+		for (j = 0; j < event_num; j++)
+			state_add_branch(&tmp_state, &state[i].branch[j]);
+		fsm_add_state(fsm, &tmp_state);
 	}
 	return fsm;
 }
-#endif
 
 void fsm_release(struct fsm_t *fsm)
 {
