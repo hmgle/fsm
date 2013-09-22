@@ -160,15 +160,25 @@ int fsm_run(struct fsm_t *fsm, int (*get_event)(void *), void *para,
 	    void *func_para, void *cb_para)
 {
 	int event;
+	struct fsm_state *tmp_state;
+	struct fsm_branch *tmp_branch;
 
 	while (!fsm->stop) {
 		event = get_event(para);
-		int current_state = fsm->curr_state;
-		if (fsm->state_list[current_state].branch[event].func)
-			fsm->state_list[current_state].branch[event].func(func_para);
-		fsm->curr_state = fsm->state_list[current_state].branch[event].new_state;
-		if (fsm->state_list[current_state].branch[event].callback)
-			fsm->state_list[current_state].branch[event].callback(cb_para);
+		list_for_each_entry(tmp_state, &fsm->state_list->list, list) {
+			if (tmp_state->state == fsm->curr_state) {
+				list_for_each_entry(tmp_branch, &tmp_state->branch->list, list) {
+					if (tmp_branch->event == event) {
+						if (tmp_branch->func)
+							tmp_branch->func(func_para);
+						fsm->curr_state = tmp_branch->new_state;
+						if (tmp_branch->callback)
+							tmp_branch->callback(cb_para);
+						continue;
+					}
+				}
+			}
+		}
 	}
 	return fsm->ret;
 }
