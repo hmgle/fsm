@@ -1,18 +1,34 @@
 #include "fsm.h"
 
+/*
+ *           a / 0                 a / 1           
+ *           ____                  ____           
+ *          /    \                /    \
+ *         |     |               |     |           
+ *          \    V                \    V           
+ *        +--------+   b / 1    +--------+
+ * -----> | state0 |----------->| state1 |
+ *        +--------+            +--------+
+ *                                /    ^
+ *                               |     |
+ *                                \    /
+ *                                 ---
+ *                                 b / 0
+ */
+
 static void *foo(void *p);
 static void *bar(void *p);
 static int get_num(void *p);
 
 static void *foo(void *p)
 {
-	printf("foo\n");
+	fprintf(stderr, "0 ");
 	return NULL;
 }
 
 static void *bar(void *p)
 {
-	printf("bar\n");
+	fprintf(stderr, "1 ");
 	return NULL;
 }
 
@@ -20,11 +36,15 @@ static int get_num(void *p)
 {
 	int c;
 
+re:
 	c = getchar();
-	if (c == 10)
+	getchar();
+	if (c == 'a')
 		return 0;
-	fprintf(stderr, "c is %d\n", c);
-	return c % 2;
+	else if (c == 'b')
+		return 1;
+	else
+		goto re;
 }
 
 int main(int argc, char **argv)
@@ -42,16 +62,16 @@ int main(int argc, char **argv)
 		/* STATE0 */
 		{
 			/* EVENT0 */
-			{EVENT0, STATE1, bar, foo},
+			{EVENT0, STATE0, foo, NULL},
 			/* EVENT1 */
-			{EVENT1, STATE0, foo, bar},
+			{EVENT1, STATE1, bar, NULL},
 		},
 		/* STATE1 */
 		{
 			/* EVENT0 */
-			{EVENT0, STATE0, bar, bar},
+			{EVENT0, STATE1, bar, NULL},
 			/* EVENT1 */
-			{EVENT1, STATE1, bar, NULL},
+			{EVENT1, STATE1, foo, NULL},
 		},
 	};
 	struct fsm_state test_fsm_state[] = {
@@ -61,7 +81,6 @@ int main(int argc, char **argv)
 
 	// fsm_init(&fsm, 2, 2, 0, 0);
 	fsm_init_with_state(&fsm, test_fsm_state, 2, 2, EVENT0);
-	fsm_print(&fsm);
 	fsm_run(&fsm, get_num, NULL, NULL, NULL);
 	// fsm_release(&fsm);
 	return 0;
