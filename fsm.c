@@ -134,6 +134,8 @@ struct fsm_t *fsm_init_with_state(struct fsm_t *fsm, struct fsm_state *state, in
 	fsm->state_list = NULL;
 	for (i = 0; i < state_num; i++) {
 		memset(&tmp_state, 0, sizeof(tmp_state));
+		tmp_state.state = state[i].state;
+		tmp_state.event_num = state[i].event_num;
 		for (j = 0; j < event_num; j++)
 			state_add_branch(&tmp_state, &state[i].branch[j]);
 		fsm_add_state(fsm, &tmp_state);
