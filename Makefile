@@ -1,6 +1,6 @@
 .PHONY: clean
 
-CFLAGS = -g -Wall -Wextra
+CFLAGS = -g -Wall -Wextra  -DDEBUG=1
 
 all: test
 

@@ -183,3 +183,19 @@ int fsm_run(struct fsm_t *fsm, int (*get_event)(void *), void *para,
 	return fsm->ret;
 }
 
+void fsm_print(struct fsm_t *fsm)
+{
+	struct fsm_state *tmp_state;
+	struct fsm_branch *tmp_branch;
+
+	list_for_each_entry(tmp_state, &fsm->state_list->list, list) {
+		list_for_each_entry(tmp_branch, &tmp_state->branch->list, list) {
+			debug_print("state is %d", tmp_state->state);
+			debug_print("event_num is %d", tmp_state->event_num);
+			debug_print("branch -> event is %d", tmp_branch->event);
+			debug_print("branch -> new_state is %d", tmp_branch->new_state);
+		}
+	}
+	debug_print();
+}
+

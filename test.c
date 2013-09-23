@@ -2,6 +2,7 @@
 
 static void *foo(void *p);
 static void *bar(void *p);
+static int get_num(void *p);
 
 static void *foo(void *p)
 {
@@ -13,6 +14,17 @@ static void *bar(void *p)
 {
 	printf("bar\n");
 	return NULL;
+}
+
+static int get_num(void *p)
+{
+	int c;
+
+	c = getchar();
+	if (c == 10)
+		return 0;
+	fprintf(stderr, "c is %d\n", c);
+	return c % 2;
 }
 
 int main(int argc, char **argv)
@@ -30,16 +42,16 @@ int main(int argc, char **argv)
 		/* STATE0 */
 		{
 			/* EVENT0 */
-			{EVENT0, EVENT1, foo, NULL},
+			{EVENT0, STATE1, bar, foo},
 			/* EVENT1 */
-			{EVENT1, EVENT0, foo, bar},
+			{EVENT1, STATE0, foo, bar},
 		},
 		/* STATE1 */
 		{
 			/* EVENT0 */
-			{EVENT0, EVENT0, foo, bar},
+			{EVENT0, STATE0, bar, bar},
 			/* EVENT1 */
-			{EVENT1, EVENT1, foo, NULL},
+			{EVENT1, STATE1, bar, NULL},
 		},
 	};
 	struct fsm_state test_fsm_state[] = {
@@ -48,7 +60,9 @@ int main(int argc, char **argv)
 	};
 
 	// fsm_init(&fsm, 2, 2, 0, 0);
-	// fsm_init_with_state(&fsm, test_fsm_state, 2, 2, EVENT0);
+	fsm_init_with_state(&fsm, test_fsm_state, 2, 2, EVENT0);
+	fsm_print(&fsm);
+	fsm_run(&fsm, get_num, NULL, NULL, NULL);
 	// fsm_release(&fsm);
 	return 0;
 }

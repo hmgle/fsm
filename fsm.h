@@ -7,6 +7,7 @@
 #include <assert.h>
 
 #include "list.h"
+#include "debug_log.h"
 
 struct fsm_branch {
 	int event;
@@ -41,4 +42,5 @@ int fsm_renew_state(struct fsm_t *fsm, struct fsm_state *state);
 struct fsm_t *fsm_init_with_state(struct fsm_t *fsm, struct fsm_state *state, int state_num, int event_num, int init_state);
 void fsm_release(struct fsm_t *fsm);
 int fsm_run(struct fsm_t *fsm, int (*get_event)(void *), void *para, void *func_para, void *cb_para);
+void fsm_print(struct fsm_t *fsm);
 #endif
