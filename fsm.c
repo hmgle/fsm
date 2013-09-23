@@ -7,7 +7,7 @@ struct fsm_t *fsm_init(struct fsm_t *fsm)
 	return fsm;
 }
 
-int state_add_branch(struct fsm_state *state, struct fsm_branch *branch)
+int state_add_branch(struct fsm_state *state, const struct fsm_branch *branch)
 {
 	struct fsm_branch *tmp;
 
@@ -30,7 +30,7 @@ int state_add_branch(struct fsm_state *state, struct fsm_branch *branch)
 	return 0;
 }
 
-int state_renew_branch(struct fsm_state *state, struct fsm_branch *branch)
+int state_renew_branch(struct fsm_state *state, const struct fsm_branch *branch)
 {
 	struct fsm_branch *tmp;
 	struct list_head *pos, *q;
@@ -62,7 +62,7 @@ int state_renew_branch(struct fsm_state *state, struct fsm_branch *branch)
 	return 0;
 }
 
-int fsm_add_state(struct fsm_t *fsm, struct fsm_state *state)
+int fsm_add_state(struct fsm_t *fsm, const struct fsm_state *state)
 {
 	struct fsm_state *tmp;
 
@@ -85,7 +85,7 @@ int fsm_add_state(struct fsm_t *fsm, struct fsm_state *state)
 	return 0;
 }
 
-int fsm_renew_state(struct fsm_t *fsm, struct fsm_state *state)
+int fsm_renew_state(struct fsm_t *fsm, const struct fsm_state *state)
 {
 	struct fsm_state *tmp;
 	struct list_head *pos, *q;
@@ -117,7 +117,7 @@ int fsm_renew_state(struct fsm_t *fsm, struct fsm_state *state)
 	return 0;
 }
 
-struct fsm_t *fsm_init_with_state(struct fsm_t *fsm, struct fsm_state *state, int state_num, 
+struct fsm_t *fsm_init_with_state(struct fsm_t *fsm, const struct fsm_state *state, int state_num, 
 				  int event_num, int init_state)
 {
 	int i;
