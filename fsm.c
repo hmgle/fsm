@@ -14,11 +14,10 @@ int state_add_branch(struct fsm_state *state, struct fsm_branch *branch)
 	assert(state != NULL && branch != NULL);
 	if (state->branch == NULL) {
 		state->branch = malloc(sizeof(*state->branch));
-		state->branch->event = branch->event;
-		state->branch->new_state = branch->new_state;
-		state->branch->func = branch->func;
-		state->branch->callback = branch->callback;
 		INIT_LIST_HEAD(&state->branch->list);
+		tmp = malloc(sizeof(*tmp));
+		memcpy(tmp, branch, sizeof(*tmp));
+		list_add(&tmp->list, &state->branch->list);
 	} else {
 		list_for_each_entry(tmp, &state->branch->list, list) {
 			if (tmp->event == branch->event)
@@ -39,11 +38,10 @@ int state_renew_branch(struct fsm_state *state, struct fsm_branch *branch)
 	assert(state != NULL && branch != NULL);
 	if (state->branch == NULL) {
 		state->branch = malloc(sizeof(*state->branch));
-		state->branch->event = branch->event;
-		state->branch->new_state = branch->new_state;
-		state->branch->func = branch->func;
-		state->branch->callback = branch->callback;
 		INIT_LIST_HEAD(&state->branch->list);
+		tmp = malloc(sizeof(*tmp));
+		memcpy(tmp, branch, sizeof(*tmp));
+		list_add(&tmp->list, &state->branch->list);
 	} else {
 		list_for_each_safe(pos, q, &state->branch->list) {
 		 	tmp = list_entry(pos, struct fsm_branch, list);
@@ -71,10 +69,10 @@ int fsm_add_state(struct fsm_t *fsm, struct fsm_state *state)
 	assert(fsm != NULL && state != NULL);
 	if (fsm->state_list == NULL) {
 		fsm->state_list = malloc(sizeof(struct fsm_state));
-		fsm->state_list->state = state->state;
-		fsm->state_list->event_num = state->event_num;
-		fsm->state_list->branch = state->branch;
 		INIT_LIST_HEAD(&fsm->state_list->list);
+		tmp = malloc(sizeof(*tmp));
+		memcpy(tmp, state, sizeof(*tmp));
+		list_add(&tmp->list, &fsm->state_list->list);
 	} else {
 		list_for_each_entry(tmp, &fsm->state_list->list, list) {
 			if (tmp->state == state->state)
@@ -95,10 +93,10 @@ int fsm_renew_state(struct fsm_t *fsm, struct fsm_state *state)
 	assert(state != NULL);
 	if (fsm->state_list == NULL) {
 		fsm->state_list = malloc(sizeof(struct fsm_state));
-		fsm->state_list->state = state->state;
-		fsm->state_list->event_num = state->event_num;
-		fsm->state_list->branch = state->branch;
 		INIT_LIST_HEAD(&fsm->state_list->list);
+		tmp = malloc(sizeof(*tmp));
+		memcpy(tmp, state, sizeof(*tmp));
+		list_add(&tmp->list, &fsm->state_list->list);
 	} else {
 		list_for_each_safe(pos, q, &fsm->state_list->list){
 		 	tmp = list_entry(pos, struct fsm_state, list);
