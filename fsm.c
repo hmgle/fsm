@@ -174,11 +174,13 @@ int fsm_run(struct fsm_t *fsm, int (*get_event)(void *), void *para,
 						fsm->curr_state = tmp_branch->new_state;
 						if (tmp_branch->callback)
 							tmp_branch->callback(cb_para);
-						continue;
+						goto next_time;
 					}
 				}
 			}
 		}
+next_time:
+		;
 	}
 	return fsm->ret;
 }
