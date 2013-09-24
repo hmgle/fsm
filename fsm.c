@@ -1,8 +1,10 @@
 #include "fsm.h"
 
-struct fsm_t *fsm_init(struct fsm_t *fsm)
+struct fsm_t *fsm_create(void)
 {
-	assert(fsm != NULL);
+	struct fsm_t *fsm;
+
+	fsm = malloc(sizeof(*fsm));
 	memset(fsm, 0, sizeof(*fsm));
 	return fsm;
 }
@@ -117,14 +119,17 @@ int fsm_renew_state(struct fsm_t *fsm, const struct fsm_state *state)
 	return 0;
 }
 
-struct fsm_t *fsm_init_with_state(struct fsm_t *fsm, const struct fsm_state *state, int state_num, 
-				  int event_num, int init_state)
+struct fsm_t *fsm_create_with_state(const struct fsm_state *state, int state_num, 
+				    int event_num, int init_state)
 {
 	int i;
 	int j;
+	struct fsm_t *fsm;
 	struct fsm_state tmp_state;
 
-	assert(state != NULL && fsm != NULL);
+	assert(state != NULL);
+	fsm = malloc(sizeof(*fsm));
+	memset(fsm, 0, sizeof(*fsm));
 	fsm->state_num = state_num;
 	fsm->init_state = init_state;
 	fsm->curr_state = init_state;
@@ -185,19 +190,21 @@ next_time:
 	return fsm->ret;
 }
 
+#if 0
 void fsm_print(struct fsm_t *fsm)
 {
 	struct fsm_state *tmp_state;
 	struct fsm_branch *tmp_branch;
 
 	list_for_each_entry(tmp_state, &fsm->state_list->list, list) {
+		printf("state: %d ", tmp_state->state);
+		printf("event_num: %d ", tmp_state->event_num);
 		list_for_each_entry(tmp_branch, &tmp_state->branch->list, list) {
-			debug_print("state is %d", tmp_state->state);
-			debug_print("event_num is %d", tmp_state->event_num);
-			debug_print("branch -> event is %d", tmp_branch->event);
-			debug_print("branch -> new_state is %d", tmp_branch->new_state);
+			printf("event: %d ", tmp_branch->event);
+			printf("new_state: %d ", tmp_branch->new_state);
 		}
+		printf("\n");
 	}
-	debug_print();
 }
+#endif
 

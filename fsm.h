@@ -34,13 +34,13 @@ struct fsm_t {
 	int ret;
 };
 
-struct fsm_t *fsm_init(struct fsm_t *fsm);
+struct fsm_t *fsm_create(void);
+struct fsm_t *fsm_create_with_state(const struct fsm_state *state, int state_num, int event_num, int init_state);
 int state_add_branch(struct fsm_state *state, const struct fsm_branch *branch);
 int state_renew_branch(struct fsm_state *state, const struct fsm_branch *branch);
 int fsm_add_state(struct fsm_t *fsm, const struct fsm_state *state);
 int fsm_renew_state(struct fsm_t *fsm, const struct fsm_state *state);
-struct fsm_t *fsm_init_with_state(struct fsm_t *fsm, const struct fsm_state *state, int state_num, int event_num, int init_state);
 void fsm_release(struct fsm_t *fsm);
 int fsm_run(struct fsm_t *fsm, int (*get_event)(void *), void *para, void *func_para, void *cb_para);
-void fsm_print(struct fsm_t *fsm);
+/* void fsm_print(struct fsm_t *fsm); */
 #endif

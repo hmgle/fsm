@@ -49,7 +49,7 @@ re:
 
 int main(int argc, char **argv)
 {
-	struct fsm_t fsm;
+	struct fsm_t *fsm;
 	enum test_state {
 		STATE0 = 0,
 		STATE1 = 1,
@@ -79,9 +79,8 @@ int main(int argc, char **argv)
 		{STATE1, 2, test_branch[1]},
 	};
 
-	// fsm_init(&fsm, 2, 2, 0, 0);
-	fsm_init_with_state(&fsm, test_fsm_state, 2, 2, EVENT0);
-	fsm_run(&fsm, get_num, NULL, NULL, NULL);
+	fsm = fsm_create_with_state(test_fsm_state, 2, 2, EVENT0);
+	fsm_run(fsm, get_num, NULL, NULL, NULL);
 	// fsm_release(&fsm);
 	return 0;
 }
