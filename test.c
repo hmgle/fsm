@@ -81,6 +81,6 @@ int main(int argc, char **argv)
 
 	fsm = fsm_create_with_state(test_fsm_state, 2, 2, EVENT0);
 	fsm_run(fsm, get_num, NULL, NULL, NULL);
-	// fsm_release(&fsm);
+	fsm_release(fsm);
 	return 0;
 }

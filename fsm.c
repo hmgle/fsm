@@ -64,6 +64,37 @@ int state_renew_branch(struct fsm_state *state, const struct fsm_branch *branch)
 	return 0;
 }
 
+int state_del_branch(struct fsm_state *state, int event)
+{
+	struct fsm_branch *tmp;
+	struct list_head *pos, *q;
+
+	list_for_each_safe(pos, q, &state->branch->list) {
+		tmp = list_entry(pos, struct fsm_branch, list);
+		if (tmp->event == event) {
+			list_del(pos);
+			free(tmp);
+			return 0;
+		}
+	}
+	return -1;
+}
+
+int state_del_all_branch(struct fsm_state *state)
+{
+	struct fsm_branch *tmp;
+	struct list_head *pos, *q;
+	int count = 0;
+
+	list_for_each_safe(pos, q, &state->branch->list) {
+		tmp = list_entry(pos, struct fsm_branch, list);
+		list_del(pos);
+		free(tmp);
+		count++;
+	}
+	return count;
+}
+
 int fsm_add_state(struct fsm_t *fsm, const struct fsm_state *state)
 {
 	struct fsm_state *tmp;
@@ -119,6 +150,21 @@ int fsm_renew_state(struct fsm_t *fsm, const struct fsm_state *state)
 	return 0;
 }
 
+int fsm_del_state(struct fsm_t *fsm, int state)
+{
+	struct fsm_state *tmp;
+	struct list_head *pos, *q;
+	list_for_each_safe(pos, q, &fsm->state_list->list) {
+		tmp = list_entry(pos, struct fsm_state, list);
+		if (tmp->state == state) {
+			list_del(pos);
+			free(tmp);
+			return 0;
+		}
+	}
+	return -1;
+}
+
 struct fsm_t *fsm_create_with_state(const struct fsm_state *state, int state_num, 
 				    int event_num, int init_state)
 {
@@ -133,10 +179,6 @@ struct fsm_t *fsm_create_with_state(const struct fsm_state *state, int state_num
 	fsm->state_num = state_num;
 	fsm->init_state = init_state;
 	fsm->curr_state = init_state;
-	fsm->data = NULL;
-	fsm->stop = 0;
-	fsm->ret = 0;
-	fsm->state_list = NULL;
 	for (i = 0; i < state_num; i++) {
 		memset(&tmp_state, 0, sizeof(tmp_state));
 		tmp_state.state = state[i].state;
@@ -150,15 +192,7 @@ struct fsm_t *fsm_create_with_state(const struct fsm_state *state, int state_num
 
 void fsm_release(struct fsm_t *fsm)
 {
-	int i;
-
-	for (i = fsm->state_num - 1; i >= 0; i--) {
-		free((fsm->state_list)[i].branch);
-		(fsm->state_list)[i].branch = NULL;
-	}
-	free(fsm->state_list);
-	fsm->state_list = NULL;
-	memset(fsm, 0, sizeof(*fsm));
+	free(fsm);
 }
 
 int fsm_run(struct fsm_t *fsm, int (*get_event)(void *), void *para,
