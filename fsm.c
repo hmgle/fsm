@@ -154,9 +154,11 @@ int fsm_del_state(struct fsm_t *fsm, int state)
 {
 	struct fsm_state *tmp;
 	struct list_head *pos, *q;
+
 	list_for_each_safe(pos, q, &fsm->state_list->list) {
 		tmp = list_entry(pos, struct fsm_state, list);
 		if (tmp->state == state) {
+			state_del_all_branch(tmp);
 			list_del(pos);
 			free(tmp);
 			return 0;
