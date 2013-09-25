@@ -92,6 +92,8 @@ int state_del_all_branch(struct fsm_state *state)
 		free(tmp);
 		count++;
 	}
+	if (state->branch)
+		free(state->branch);
 	return count;
 }
 
@@ -180,6 +182,8 @@ int fsm_del_all_state(struct fsm_t *fsm)
 		free(tmp);
 		count++;
 	}
+	if (fsm->state_list)
+		free(fsm->state_list);
 	return count;
 }
 
