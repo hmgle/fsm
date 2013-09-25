@@ -167,6 +167,22 @@ int fsm_del_state(struct fsm_t *fsm, int state)
 	return -1;
 }
 
+int fsm_del_all_state(struct fsm_t *fsm)
+{
+	struct fsm_state *tmp;
+	struct list_head *pos, *q;
+	int count = 0;
+
+	list_for_each_safe(pos, q, &fsm->state_list->list) {
+		tmp = list_entry(pos, struct fsm_state, list);
+		state_del_all_branch(tmp);
+		list_del(pos);
+		free(tmp);
+		count++;
+	}
+	return count;
+}
+
 struct fsm_t *fsm_create_with_state(const struct fsm_state *state, int state_num, 
 				    int event_num, int init_state)
 {

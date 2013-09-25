@@ -43,6 +43,7 @@ int state_del_all_branch(struct fsm_state *state);
 int fsm_add_state(struct fsm_t *fsm, const struct fsm_state *state);
 int fsm_renew_state(struct fsm_t *fsm, const struct fsm_state *state);
 int fsm_del_state(struct fsm_t *fsm, int state);
+int fsm_del_all_state(struct fsm_t *fsm);
 void fsm_release(struct fsm_t *fsm);
 int fsm_run(struct fsm_t *fsm, int (*get_event)(void *), void *para, void *func_para, void *cb_para);
 /* void fsm_print(struct fsm_t *fsm); */
