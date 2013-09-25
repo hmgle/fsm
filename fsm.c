@@ -210,6 +210,7 @@ struct fsm_t *fsm_create_with_state(const struct fsm_state *state, int state_num
 
 void fsm_release(struct fsm_t *fsm)
 {
+	fsm_del_all_state(fsm);
 	free(fsm);
 }
 
