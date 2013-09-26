@@ -247,7 +247,7 @@ next_time:
 	return fsm->ret;
 }
 
-#if 0
+#if 1
 void fsm_print(struct fsm_t *fsm)
 {
 	struct fsm_state *tmp_state;
@@ -255,10 +255,10 @@ void fsm_print(struct fsm_t *fsm)
 
 	list_for_each_entry(tmp_state, &fsm->state_list->list, list) {
 		printf("state: %d ", tmp_state->state);
-		printf("event_num: %d ", tmp_state->event_num);
+		printf("event_num: %d \n", tmp_state->event_num);
 		list_for_each_entry(tmp_branch, &tmp_state->branch->list, list) {
 			printf("event: %d ", tmp_branch->event);
-			printf("new_state: %d ", tmp_branch->new_state);
+			printf("new_state: %d \n", tmp_branch->new_state);
 		}
 		printf("\n");
 	}

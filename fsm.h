@@ -46,5 +46,9 @@ int fsm_del_state(struct fsm_t *fsm, int state);
 int fsm_del_all_state(struct fsm_t *fsm);
 void fsm_release(struct fsm_t *fsm);
 int fsm_run(struct fsm_t *fsm, int (*get_event)(void *), void *para, void *func_para, void *cb_para);
-/* void fsm_print(struct fsm_t *fsm); */
+static inline void fsm_stop(struct fsm_t *fsm)
+{
+	fsm->stop = 1;
+}
+void fsm_print(struct fsm_t *fsm);
 #endif
