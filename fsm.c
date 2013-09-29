@@ -4,7 +4,7 @@ struct fsm_t *fsm_create(void)
 {
 	struct fsm_t *fsm;
 
-	fsm = calloc(sizeof(*fsm));
+	fsm = calloc(1, sizeof(*fsm));
 	return fsm;
 }
 
@@ -19,6 +19,7 @@ int state_add_branch(struct fsm_state *state, const struct fsm_branch *branch)
 		tmp = malloc(sizeof(*tmp));
 		memcpy(tmp, branch, sizeof(*tmp));
 		list_add(&tmp->list, &state->branch->list);
+		state->event_num++;
 	} else {
 		list_for_each_entry(tmp, &state->branch->list, list) {
 			if (tmp->event == branch->event)
@@ -195,7 +196,7 @@ struct fsm_t *fsm_create_with_state(const struct fsm_state *state, int state_num
 	struct fsm_state tmp_state;
 
 	assert(state != NULL);
-	fsm = calloc(sizeof(*fsm));
+	fsm = calloc(1, sizeof(*fsm));
 	fsm->state_num = state_num;
 	fsm->init_state = init_state;
 	fsm->curr_state = init_state;
