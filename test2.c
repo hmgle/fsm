@@ -3,6 +3,13 @@
  */
 
 #include "fsm.h"
+
+enum states {
+	before = 0,
+	inside = 1,
+	after  = 2,
+};
+
 enum event {
 	S = 0,	/* 空白字符 */
 	N = 1,	/* 换行字符 */
@@ -31,20 +38,15 @@ static int get_char(int *p)
 		return A;
 }
 
-static void *print(int *p)
+static void *print(void *p)
 {
-	putchar(*p);
+	putchar(*(int *)p);
 	return NULL;
 }
 
 int main(int argc, char **argv)
 {
 	int c;
-	enum states {
-		before = 0,
-		inside = 1,
-		after  = 2,
-	};
 	struct fsm_branch branch[][4] = {
 		/* before */
 		{
