@@ -75,6 +75,7 @@ int state_del_branch(struct fsm_state *state, int event)
 		if (tmp->event == event) {
 			list_del(pos);
 			free(tmp);
+			state->event_num--;
 			return 0;
 		}
 	}
@@ -95,6 +96,7 @@ int state_del_all_branch(struct fsm_state *state)
 	}
 	if (state->branch)
 		free(state->branch);
+	state->event_num = 0;
 	return count;
 }
 
@@ -118,6 +120,7 @@ int fsm_add_state(struct fsm_t *fsm, const struct fsm_state *state)
 		memcpy(tmp, state, sizeof(*tmp));
 		list_add(&tmp->list, &fsm->state_list->list);
 	}
+	fsm->state_num++;
 	return 0;
 }
 
@@ -150,6 +153,7 @@ int fsm_renew_state(struct fsm_t *fsm, const struct fsm_state *state)
 		memcpy(tmp, state, sizeof(*tmp));
 		list_add(&tmp->list, &fsm->state_list->list);
 	}
+	fsm->state_num++;
 	return 0;
 }
 
@@ -164,6 +168,7 @@ int fsm_del_state(struct fsm_t *fsm, int state)
 			state_del_all_branch(tmp);
 			list_del(pos);
 			free(tmp);
+			fsm->state_num--;
 			return 0;
 		}
 	}
@@ -185,6 +190,7 @@ int fsm_del_all_state(struct fsm_t *fsm)
 	}
 	if (fsm->state_list)
 		free(fsm->state_list);
+	fsm->state_num = 0;
 	return count;
 }
 
@@ -198,7 +204,6 @@ struct fsm_t *fsm_create_with_state(const struct fsm_state *state, int state_num
 
 	assert(state != NULL);
 	fsm = calloc(1, sizeof(*fsm));
-	fsm->state_num = state_num;
 	fsm->init_state = init_state;
 	fsm->curr_state = init_state;
 	for (i = 0; i < state_num; i++) {
