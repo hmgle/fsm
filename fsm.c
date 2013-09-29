@@ -4,8 +4,7 @@ struct fsm_t *fsm_create(void)
 {
 	struct fsm_t *fsm;
 
-	fsm = malloc(sizeof(*fsm));
-	memset(fsm, 0, sizeof(*fsm));
+	fsm = calloc(sizeof(*fsm));
 	return fsm;
 }
 
@@ -196,8 +195,7 @@ struct fsm_t *fsm_create_with_state(const struct fsm_state *state, int state_num
 	struct fsm_state tmp_state;
 
 	assert(state != NULL);
-	fsm = malloc(sizeof(*fsm));
-	memset(fsm, 0, sizeof(*fsm));
+	fsm = calloc(sizeof(*fsm));
 	fsm->state_num = state_num;
 	fsm->init_state = init_state;
 	fsm->curr_state = init_state;
