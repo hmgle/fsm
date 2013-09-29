@@ -23,8 +23,6 @@ struct para {
 	int c;
 };
 
-static struct fsm_t *fsm;
-
 static void *stop(void *p)
 {
 	fsm_stop(((struct para *)p)->fsm);
@@ -93,9 +91,8 @@ int main(int argc, char **argv)
 		{inside, 4, branch[1],},
 		{after,  4, branch[2],},
 	};
-	fsm = fsm_create_with_state(test_fsm_state, 3, 4, before);
-	func_para.fsm = fsm;
-	fsm_run(fsm, get_char, &func_para, &func_para, NULL);
-	fsm_release(fsm);
+	func_para.fsm = fsm_create_with_state(test_fsm_state, 3, 4, before);
+	fsm_run(func_para.fsm, get_char, &func_para, &func_para, NULL);
+	fsm_release(func_para.fsm);
 	return 0;
 }
