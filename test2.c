@@ -30,7 +30,7 @@ static int get_char(int *p)
 	*p = getchar();
 	if (*p == '\n')
 		return N;
-	else if (*p == ' ')
+	else if (*p == ' ' || *p == '\t')
 		return S;
 	else if (*p == EOF)
 		return Q;
