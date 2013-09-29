@@ -19,7 +19,6 @@ int state_add_branch(struct fsm_state *state, const struct fsm_branch *branch)
 		tmp = malloc(sizeof(*tmp));
 		memcpy(tmp, branch, sizeof(*tmp));
 		list_add(&tmp->list, &state->branch->list);
-		state->event_num++;
 	} else {
 		list_for_each_entry(tmp, &state->branch->list, list) {
 			if (tmp->event == branch->event)
@@ -29,6 +28,7 @@ int state_add_branch(struct fsm_state *state, const struct fsm_branch *branch)
 		memcpy(tmp, branch, sizeof(*tmp));
 		list_add(&tmp->list, &state->branch->list);
 	}
+	state->event_num++;
 	return 0;
 }
 
@@ -61,6 +61,7 @@ int state_renew_branch(struct fsm_state *state, const struct fsm_branch *branch)
 		memcpy(tmp, branch, sizeof(*tmp));
 		list_add(&tmp->list, &state->branch->list);
 	}
+	state->event_num++;
 	return 0;
 }
 
