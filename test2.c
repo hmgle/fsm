@@ -86,12 +86,15 @@ int main(int argc, char **argv)
 			{Q, 0, stop,},
 		},
 	};
-	struct fsm_state test_fsm_state[] = {
-		{before, 4, branch[0],},
-		{inside, 4, branch[1],},
-		{after,  4, branch[2],},
+	struct fsm_state fsm_state[] = {
+		{before, sizeof(branch[0]) / sizeof(branch[0][0]), branch[0],},
+		{inside, sizeof(branch[1]) / sizeof(branch[1][0]), branch[1],},
+		{after,  sizeof(branch[2]) / sizeof(branch[2][0]), branch[2],},
 	};
-	func_para.fsm = fsm_create_with_state(test_fsm_state, 3, 4, before);
+	func_para.fsm = fsm_create_with_state(fsm_state, 
+				sizeof(fsm_state) / sizeof(fsm_state[0]), 
+				sizeof(branch[0]) / sizeof(branch[0][0]),
+				before);
 	fsm_run(func_para.fsm, get_char, &func_para, &func_para, NULL);
 	fsm_release(func_para.fsm);
 	return 0;
