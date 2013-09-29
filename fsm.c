@@ -218,7 +218,7 @@ void fsm_release(struct fsm_t *fsm)
 	free(fsm);
 }
 
-int fsm_run(struct fsm_t *fsm, int (*get_event)(void *), void *para,
+int fsm_run(struct fsm_t *fsm, int (*get_event)(void *), void *get_event_para,
 	    void *func_para, void *cb_para)
 {
 	int event;
@@ -226,7 +226,7 @@ int fsm_run(struct fsm_t *fsm, int (*get_event)(void *), void *para,
 	struct fsm_branch *tmp_branch;
 
 	while (!fsm->stop) {
-		event = get_event(para);
+		event = get_event(get_event_para);
 		list_for_each_entry(tmp_state, &fsm->state_list->list, list) {
 			if (tmp_state->state == fsm->curr_state) {
 				list_for_each_entry(tmp_branch, &tmp_state->branch->list, list) {

@@ -18,22 +18,27 @@ enum event {
 	Q = 3,	/* EOF */
 };
 
+struct para {
+	struct fsm_t *fsm;
+	int c;
+};
+
 static struct fsm_t *fsm;
 
 static void *stop(void *p)
 {
-	fsm_stop(fsm);
+	fsm_stop(((struct para *)p)->fsm);
 	return NULL;
 }
 
-static int get_char(int *p)
+static int get_char(void *p)
 {
-	*p = getchar();
-	if (*p == '\n')
+	((struct para *)p)->c = getchar();
+	if (((struct para *)p)->c == '\n')
 		return N;
-	else if (isblank(*p))
+	else if (isblank(((struct para *)p)->c))
 		return S;
-	else if (*p == EOF)
+	else if (((struct para *)p)->c == EOF)
 		return Q;
 	else
 		return A;
@@ -41,13 +46,13 @@ static int get_char(int *p)
 
 static void *print(void *p)
 {
-	putchar(*(int *)p);
+	putchar(((struct para *)p)->c);
 	return NULL;
 }
 
 int main(int argc, char **argv)
 {
-	int c;
+	struct para func_para;
 	struct fsm_branch branch[][4] = {
 		/* before */
 		{
@@ -89,7 +94,8 @@ int main(int argc, char **argv)
 		{after,  4, branch[2],},
 	};
 	fsm = fsm_create_with_state(test_fsm_state, 3, 4, before);
-	fsm_run(fsm, get_char, &c, &c, NULL);
+	func_para.fsm = fsm;
+	fsm_run(fsm, get_char, &func_para, &func_para, NULL);
 	fsm_release(fsm);
 	return 0;
 }
