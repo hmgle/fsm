@@ -3,6 +3,7 @@
  */
 
 #include "fsm.h"
+#include <ctype.h>
 
 enum states {
 	before = 0,
@@ -30,7 +31,7 @@ static int get_char(int *p)
 	*p = getchar();
 	if (*p == '\n')
 		return N;
-	else if (*p == ' ' || *p == '\t')
+	else if (isblank(*p))
 		return S;
 	else if (*p == EOF)
 		return Q;
