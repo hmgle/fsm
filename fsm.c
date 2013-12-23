@@ -46,10 +46,10 @@ int state_renew_branch(struct fsm_state *state, const struct fsm_branch *branch)
 		list_add(&tmp->list, &state->branch->list);
 	} else {
 		list_for_each_safe(pos, q, &state->branch->list) {
-		 	tmp = list_entry(pos, struct fsm_branch, list);
+			tmp = list_entry(pos, struct fsm_branch, list);
 			if (tmp->event == branch->event) {
-		 		list_del(pos);
-		 		free(tmp);
+				list_del(pos);
+				free(tmp);
 
 				tmp = malloc(sizeof(*tmp));
 				memcpy(tmp, branch, sizeof(*tmp));
@@ -137,11 +137,11 @@ int fsm_renew_state(struct fsm_t *fsm, const struct fsm_state *state)
 		memcpy(tmp, state, sizeof(*tmp));
 		list_add(&tmp->list, &fsm->state_list->list);
 	} else {
-		list_for_each_safe(pos, q, &fsm->state_list->list){
-		 	tmp = list_entry(pos, struct fsm_state, list);
+		list_for_each_safe(pos, q, &fsm->state_list->list) {
+			tmp = list_entry(pos, struct fsm_state, list);
 			if (tmp->state == state->state) {
-		 		list_del(pos);
-		 		free(tmp);
+				list_del(pos);
+				free(tmp);
 
 				tmp = malloc(sizeof(*tmp));
 				memcpy(tmp, state, sizeof(*tmp));
@@ -194,8 +194,9 @@ int fsm_del_all_state(struct fsm_t *fsm)
 	return count;
 }
 
-struct fsm_t *fsm_create_with_state(const struct fsm_state *state, int state_num, 
-				    int event_num, int init_state)
+struct fsm_t *fsm_create_with_state(const struct fsm_state *state,
+				    int state_num, int event_num,
+				    int init_state)
 {
 	int i;
 	int j;
@@ -234,13 +235,18 @@ int fsm_run(struct fsm_t *fsm, int (*get_event)(void *), void *get_event_para,
 		event = get_event(get_event_para);
 		list_for_each_entry(tmp_state, &fsm->state_list->list, list) {
 			if (tmp_state->state == fsm->curr_state) {
-				list_for_each_entry(tmp_branch, &tmp_state->branch->list, list) {
+				list_for_each_entry(tmp_branch,
+						    &tmp_state->branch->list,
+						    list) {
 					if (tmp_branch->event == event) {
 						if (tmp_branch->func)
-							tmp_branch->func(func_para);
-						fsm->curr_state = tmp_branch->new_state;
+							tmp_branch->
+							    func(func_para);
+						fsm->curr_state =
+						    tmp_branch->new_state;
 						if (tmp_branch->callback)
-							tmp_branch->callback(cb_para);
+							tmp_branch->
+							    callback(cb_para);
 						goto next_time;
 					}
 				}
@@ -269,4 +275,3 @@ void fsm_print(struct fsm_t *fsm)
 	}
 }
 #endif
-
